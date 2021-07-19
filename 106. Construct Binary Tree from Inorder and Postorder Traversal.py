@@ -1,3 +1,4 @@
+# Construct Binary Tree from Inorder and Postorder Traversal
 # Definition for a binary tree node.
 class TreeNode:
     def __init__(self, val=0, left=None, right=None):
@@ -16,5 +17,3 @@ class Solution:
         mid.left = self.buildTree(inorder[:mid_idx], postorder[:mid_idx])
         mid.right = self.buildTree(inorder[mid_idx+1:], postorder[mid_idx:len(inorder)-1])
         return mid
-
-Solution().buildTree([9,3,15,20,7],[9,15,7,20,3])
