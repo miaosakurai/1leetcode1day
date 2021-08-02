@@ -1,7 +1,7 @@
 # 离岛问题
 # 先用UnionFind统计一下每个岛的大小，再找0点
 # UnionFind总是写错。。
-# 这里的UnionFind增加了一个sizes，用来记录岛的大小，相应地增加一个add函数用于初始化值为1的“新岛”
+# 这里的UnionFind增加了一个sizes数组，用来记录岛的大小
 
 from collections import namedtuple
 from typing import Counter
@@ -10,11 +10,7 @@ class UnionFind:
     def __init__(self, n) -> None:
         # parents一维数组，元数据为二维时可以用 row * n + col 压缩到一维
         self.parents = [i for i in range(n)]
-        self.sizes = [0 for i in range(n)]
-
-    def add(self, x):
-        if self.sizes[x]==0:
-            self.sizes[x]=1
+        self.sizes = [1 for i in range(n)]
 
     # 压缩路径：我parent的parent就是我的parent
     def find(self, x):
@@ -30,9 +26,8 @@ class UnionFind:
     def union(self, x, y):
         p_x, p_y = self.find(x), self.find(y)
         if p_x!=p_y:
-            new_size = self.sizes[p_x] + self.sizes[p_y]
-            self.parents[p_x]=p_y  # ＼_(・ω・`)ｺｺ重要！
-            self.sizes[p_y] = new_size
+            self.sizes[p_y] = self.sizes[p_x] + self.sizes[p_y]
+            self.parents[p_x]=p_y   # ＼_(・ω・`)ｺｺ重要！
 
 class Solution:
     def largestIsland(self, grid) -> int:
@@ -43,22 +38,19 @@ class Solution:
             for j in range(N):
                 if grid[i][j]==0: continue
                 cur_id = i*N+j
-                uf.add(cur_id)
-                neighbors = self.validNeighbors(grid, i, j)
-                for nb in neighbors:
-                    nei_id = nb[0]*N+nb[1]
-                    uf.add(nei_id)
+                nei_ids = self.validNeighborsId(grid, i, j)
+                for nei_id in nei_ids:
                     uf.union(cur_id, nei_id)
-                print(uf.find(cur_id))
-                res = max(res, uf.sizes[uf.find(cur_id)])
+        
+        res = max(uf.sizes)
         
         for i in range(N):
             for j in range(N):
                 if grid[i][j]==1: continue
                 nei_dir = {}
-                neighbors = self.validNeighbors(grid, i, j)
-                for nb in neighbors:
-                    id = uf.find(nb[0]*N+nb[1])
+                nei_ids = self.validNeighborsId(grid, i, j)
+                for nei_id in nei_ids:
+                    id = uf.find(nei_id)
                     nei_dir[id]=uf.sizes[id]
                 new_size = 1
                 for k in nei_dir:
@@ -66,14 +58,16 @@ class Solution:
                 res = max(res, new_size)
         return res
                 
-    def validNeighbors(self, grid, i, j):
+    def validNeighborsId(self, grid, i, j):
+        N = len(grid)
         neighbors = [[i,j-1], [i, j+1], [i-1, j], [i+1, j]]
         results = []
-        for n in neighbors:
-            if 0<= n[0] < len(grid) and 0 <= n[1] < len(grid) and grid[n[0]][n[1]]==1:
-                results.append(n)
+                
+        for nb in neighbors:
+            if 0<= nb[0] < N and 0 <= nb[1] < N and grid[nb[0]][nb[1]]==1:
+                results.append(nb[0]*N+nb[1])
         return results
-        
+                
 
     def largestIsland_TLE(self, grid) -> int:
         # change every 0 to 1, then get size in that component
