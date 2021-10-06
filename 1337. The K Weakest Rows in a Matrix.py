@@ -1,6 +1,10 @@
 class Solution:
-    # use dict instead of sorting
+    # Approach 1. sorting 
     def kWeakestRows(self, mat: List[List[int]], k: int) -> List[int]:
+        return sorted(range(len(mat)), key=lambda x: sum(mat[x]))[:k]
+
+    # Approach 2. use dict instead of sorting
+    def kWeakestRows2(self, mat: List[List[int]], k: int) -> List[int]:
         m = len(mat)
         n = len(mat[0])
         d = defaultdict(list)
