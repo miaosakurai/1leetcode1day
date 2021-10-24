@@ -6,15 +6,26 @@ class Solution:
     # Given a string s, return the sum of beauty of all of its substrings.
     # len(s)<3: return 0
         
-    # bf Counter, O(n^2)
+    # bf, Counter, O(n^2)
     def beautySum1(self, s: str) -> int:
         res = 0
         for i in range(len(s)):
             for j in range(i, len(s)):
-                c = Counter(s[i:j+1])  # Counter size<=26, 可以算常数时间
-                res += c.most_common()[0][1]-c.most_common()[-1][1]
+                c = Counter(s[i:j+1])  # 搬到外层
+                res += c.most_common()[0][1]-c.most_common()[-1][1]  # 只调用一次
         return res
-        
+    # bf, Counter优化
+    def beautySum1(self, s: str) -> int:
+        res = 0
+        for i in range(len(s)):
+            c = Counter()
+            for j in range(i, len(s)):
+                c[s[j]]+=1
+                order = c.most_common()
+                res += order[0][1]-order[-1][1]
+        return res
+    
+    # 参考
     def beautySum_ref(self, s: str) -> int:
         ans = 0 
         for i in range(len(s)):
