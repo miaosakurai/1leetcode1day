@@ -5,16 +5,14 @@ class Solution:
     # the beauty of "abaacc" is 3 - 1 = 2
     # Given a string s, return the sum of beauty of all of its substrings.
     # len(s)<3: return 0
-    
-    # Counter, O(n^2)
+        
+    # bf Counter, O(n^2)
     def beautySum1(self, s: str) -> int:
-        if len(s)<3: return 0
         res = 0
-        for start in range(len(s)-2):
-            for end in range(start+2, len(s)):
-                c = Counter(s[start:end+1]) # Counter size<=26, 可以算常数时间
-                order = c.most_common() 
-                res += order[0][1]-order[-1][1]
+        for i in range(len(s)):
+            for j in range(i, len(s)):
+                c = Counter(s[i:j+1])  # Counter size<=26, 可以算常数时间
+                res += c.most_common()[0][1]-c.most_common()[-1][1]
         return res
         
     def beautySum_ref(self, s: str) -> int:
