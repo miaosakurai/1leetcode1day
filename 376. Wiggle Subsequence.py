@@ -1,4 +1,5 @@
 class Solution:
+    # find wiggle sequence转化为找单调性变化的次数
     def wiggleMaxLength(self, nums: List[int]) -> int:
         if len(nums)==1: return 1
         res = 1
