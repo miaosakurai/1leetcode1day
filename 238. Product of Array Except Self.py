@@ -10,3 +10,15 @@ class Solution:
         for i in range(n):
             res[i] = l2r[i]*r2l[i]
         return res
+
+    def productExceptSelf2(self, nums: List[int]) -> List[int]:
+        n = len(nums)
+        res = [1] * n
+        
+        for i in range(1, n):
+            res[i] = res[i-1] * nums[i-1]
+        r = 1
+        for i in reversed(range(n-1)):
+            r = r * nums[i+1]
+            res[i] = res[i] * r
+        return res
