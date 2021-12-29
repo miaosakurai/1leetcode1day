@@ -43,3 +43,25 @@ class Solution:
                 if l<n+1:
                     res = min(res, r-l+1)
         return res
+
+    def minSubArrayLen2(self, target: int, nums: List[int]) -> int:
+        # 2 pointers
+        n = len(nums)
+        sums = [0] * (n+1)  # sum before i
+        for i in range(1, n+1):
+            sums[i] = sums[i-1]+nums[i-1]
+        if sums[n]<target: return 0
+        
+        def get_sum(l,r):
+            return sums[r+1]-sums[l]
+        
+        l, r, res = 0, 0, n
+        while r<n:
+            while r<n and get_sum(l,r)<target:
+                r+=1
+            if r<n:
+                res = min(res, r-l+1)
+                while l<=r and get_sum(l,r)>=target:
+                    l+=1
+                    res = min(res, r-l+2)
+        return res
