@@ -1,19 +1,22 @@
 class Solution:
     def simplifyPath(self, path: str) -> str:
         stack = []
-        tokens = []
-        i,j = 0,0
-        while i<len(path):
-            if path[i]!='/':
-                j = i+1
-                while j<len(path) and path[j]!='/':
-                    j+=1
-                tokens.append(path[i:j])
-                i=j+1
-            else:
-                i+=1
+
+        tokens = path.split('/')
+        # tokens = []
+        # i,j = 0,0
+        # while i<len(path):
+        #     if path[i]!='/':
+        #         j = i+1
+        #         while j<len(path) and path[j]!='/':
+        #             j+=1
+        #         tokens.append(path[i:j])
+        #         i=j+1
+        #     else:
+        #         i+=1
+        
         for t in tokens:
-            if t=='.':
+            if t in {'.',''}:
                 continue
             elif t=='..':
                 if len(stack)>0:
