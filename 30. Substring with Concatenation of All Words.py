@@ -8,7 +8,8 @@ class Solution:
         for i in range(lw):
             counter = Counter(words)
             j=i
-            while i<len(s)-lw*nw+1:
+            # 右移j / 左移i / i,j到下个起点
+            while i<=len(s)-lw*nw:
                 if s[j:j+lw] not in counter: # start from right next
                     i=j+lw
                     j=i
@@ -19,7 +20,6 @@ class Solution:
                 else:
                     counter[s[j:j+lw]]-=1 # move right
                     j+=lw
-                    
                 # print(counter, s[i:j], i, j)
                 if sum(counter.values())==0:
                     res.append(i)
